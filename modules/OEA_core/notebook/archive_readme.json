@@ -1,8 +1,8 @@
 {
-	"name": "sandbox_readme",
+	"name": "archive_readme",
 	"properties": {
 		"folder": {
-			"name": "sandbox"
+			"name": "sandbox/archive"
 		},
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -40,11 +40,9 @@
 					}
 				},
 				"source": [
-					"# sandbox\r\n",
-					"Use this folder for notebooks that are works in progress or just test notebooks.\r\n",
-					"\r\n",
+					"# archive\r\n",
 					"It's generally good to delete notebooks that are not being used in order to reduce clutter - keep in mind that you can always go back to your git repo history if you ever need to.\r\n",
-					"Another way to reduce clutter is to move notebooks into the \"archive\" folder."
+					"But another way to reduce clutter is to move notebooks into this \"archive\" folder - at least temporarily."
 				]
 			}
 		]
