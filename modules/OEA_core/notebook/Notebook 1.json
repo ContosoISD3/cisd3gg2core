@@ -2,7 +2,7 @@
 	"name": "Notebook 1",
 	"properties": {
 		"folder": {
-			"name": "3) sandbox/archive"
+			"name": "sandbox/archive"
 		},
 		"nbformat": 4,
 		"nbformat_minor": 2,

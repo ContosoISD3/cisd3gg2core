@@ -2,7 +2,7 @@
 	"name": "Main",
 	"properties": {
 		"folder": {
-			"name": "1) Implementation"
+			"name": "Implementation"
 		},
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -26,8 +26,7 @@
 			},
 			"language_info": {
 				"name": "python"
-			},
-			"sessionKeepAliveTimeout": 30
+			}
 		},
 		"cells": [
 			{

@@ -2,7 +2,7 @@
 	"name": "Contoso ISD",
 	"properties": {
 		"folder": {
-			"name": "2) OEA Framework/Packages"
+			"name": "OEA Framework/Packages"
 		},
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -26,8 +26,7 @@
 			},
 			"language_info": {
 				"name": "python"
-			},
-			"sessionKeepAliveTimeout": 30
+			}
 		},
 		"cells": [
 			{

@@ -2,7 +2,7 @@
 	"name": "setup",
 	"properties": {
 		"folder": {
-			"name": "3) sandbox/archive/s1_to_s2"
+			"name": "sandbox/archive/s1_to_s2"
 		},
 		"nbformat": 4,
 		"nbformat_minor": 2,
