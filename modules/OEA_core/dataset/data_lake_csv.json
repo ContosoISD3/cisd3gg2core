@@ -1,10 +1,6 @@
 {
 	"name": "data_lake_csv",
 	"properties": {
-		"linkedServiceName": {
-			"referenceName": "syn-oea-cisd3gg1-WorkspaceDefaultStorage",
-			"type": "LinkedServiceReference"
-		},
 		"parameters": {
 			"filesystem": {
 				"type": "string"
@@ -14,7 +10,7 @@
 			}
 		},
 		"folder": {
-			"name": "OEA_core"
+			"name": "OEA Framework"
 		},
 		"annotations": [],
 		"type": "DelimitedText",
