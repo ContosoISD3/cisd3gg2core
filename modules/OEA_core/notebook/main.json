@@ -1,8 +1,8 @@
 {
-	"name": "Main",
+	"name": "main",
 	"properties": {
 		"folder": {
-			"name": "oea_implementation"
+			"name": "implementation"
 		},
 		"nbformat": 4,
 		"nbformat_minor": 2,

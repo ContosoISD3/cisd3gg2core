@@ -2,7 +2,7 @@
 	"name": "OurSIS",
 	"properties": {
 		"folder": {
-			"name": "oea_implementation/Custom_Modules"
+			"name": "implementation/Custom_Modules"
 		},
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -26,7 +26,8 @@
 			},
 			"language_info": {
 				"name": "python"
-			}
+			},
+			"sessionKeepAliveTimeout": 30
 		},
 		"cells": [
 			{
