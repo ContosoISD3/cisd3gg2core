@@ -1,5 +1,5 @@
 {
-	"name": "archive_readme",
+	"name": "__archive_readme",
 	"properties": {
 		"folder": {
 			"name": "sandbox/archive"
@@ -26,8 +26,7 @@
 			},
 			"language_info": {
 				"name": "python"
-			},
-			"sessionKeepAliveTimeout": 30
+			}
 		},
 		"cells": [
 			{

@@ -1,5 +1,5 @@
 {
-	"name": "OEA Map",
+	"name": "__oea_map",
 	"properties": {
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -40,10 +40,8 @@
 				"sparkVersion": "3.0",
 				"nodeCount": 3,
 				"cores": 4,
-				"memory": 28,
-				"automaticScaleJobs": false
-			},
-			"sessionKeepAliveTimeout": 30
+				"memory": 28
+			}
 		},
 		"cells": [
 			{

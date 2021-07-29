@@ -2,7 +2,7 @@
 	"name": "OurSIS",
 	"properties": {
 		"folder": {
-			"name": "Implementation/Custom_Modules"
+			"name": "oea_implementation/Custom_Modules"
 		},
 		"nbformat": 4,
 		"nbformat_minor": 2,

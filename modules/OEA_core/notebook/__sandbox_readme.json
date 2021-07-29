@@ -1,5 +1,5 @@
 {
-	"name": "sandbox_readme",
+	"name": "__sandbox_readme",
 	"properties": {
 		"folder": {
 			"name": "sandbox"
@@ -26,8 +26,7 @@
 			},
 			"language_info": {
 				"name": "python"
-			},
-			"sessionKeepAliveTimeout": 30
+			}
 		},
 		"cells": [
 			{
