@@ -1,0 +1,149 @@
+{
+	"name": "M365_v0p3",
+	"properties": {
+		"folder": {
+			"name": "3) sandbox/archive"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "spark2v3",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/7b9a4896-4541-483f-bdc7-d8f4ec6be3ee/resourceGroups/rg-oea-CISD3GG1/providers/Microsoft.Synapse/workspaces/syn-oea-cisd3gg1/bigDataPools/spark2v3",
+				"name": "spark2v3",
+				"type": "Spark",
+				"endpoint": "https://syn-oea-cisd3gg1.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spark2v3",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.0",
+				"nodeCount": 10,
+				"cores": 4,
+				"memory": 28
+			}
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"storage_account = 'stoeacisd3gg1'\r\n",
+					"use_test_env = False"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"if use_test_env:\r\n",
+					"    stage1 = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage1'\r\n",
+					"    stage2 = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage2'\r\n",
+					"    stage3 = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage3'\r\n",
+					"else:\r\n",
+					"    stage1 = 'abfss://stage1@' + storage_account + '.dfs.core.windows.net'\r\n",
+					"    stage2 = 'abfss://stage2@' + storage_account + '.dfs.core.windows.net'\r\n",
+					"    stage3 = 'abfss://stage3@' + storage_account + '.dfs.core.windows.net'"
+				],
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"stage1_m365_roster = stage1 + '/M365/roster/2021-06-15T04-04-12'\r\n",
+					"stage1_m365_activity = stage1 + '/m365/DIPData/Activity/ApplicationUsage'\r\n",
+					"\r\n",
+					"# Process Roster data from stage 1 to stage 2\r\n",
+					"# This includes:\r\n",
+					"# - adding column names\r\n",
+					"# - casting values into specific data types when appropriate\r\n",
+					"\r\n",
+					"def prep_stage1_M365(entity_name, sql_str):\r\n",
+					"  df = spark.read.csv(stage1_m365_roster + '/' + entity_name, header='false')\r\n",
+					"  if (df.count() > 0):\r\n",
+					"    sqlContext.registerDataFrameAsTable(df, entity_name)\r\n",
+					"    df = spark.sql(sql_str)\r\n",
+					"    df.write.format('delta').mode('overwrite').save(stage2 + '/M365/' + entity_name)\r\n",
+					"\r\n",
+					"# Person\r\n",
+					"sql_str = \"select _c0 Id, to_timestamp(_c1) FirstSeenDateTime, to_timestamp(_c2) LastSeenDateTime, _c3 GivenName, _c4 MiddleName, _c5 PreferredGivenName, _c6 PreferredMiddleName, _c7 PreferredSurname, _c8 Surname from Person\"\r\n",
+					"prep_stage1_M365('Person', sql_str)\r\n",
+					"# PersonDemographic\r\n",
+					"sql_str = \"select _c0 PersonId, to_timestamp(_c1) FirstSeenDateTime, _c2 BirthCity, _c3 BirthCityCountryCode, _c4 BirthDate, _c5 BirthState, _c6 RefSexId from PersonDemographic\"\r\n",
+					"prep_stage1_M365('PersonDemographic', sql_str)\r\n",
+					"\r\n",
+					""
+				],
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"#print(mssparkutils.fs.ls(stage1 + '/M365/roster'))\r\n",
+					"folders = mssparkutils.fs.ls(stage1 + '/M365/roster')\r\n",
+					"for folder in folders:\r\n",
+					"    print(folder[1])"
+				],
+				"execution_count": 15
+			}
+		]
+	}
+}

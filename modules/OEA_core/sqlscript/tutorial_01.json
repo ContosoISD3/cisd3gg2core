@@ -1,0 +1,17 @@
+{
+	"name": "tutorial_01",
+	"properties": {
+		"content": {
+			"query": "-- Tutorial on use of SQL serverless pool.\n-- For more info: https://docs.microsoft.com/en-us/azure/synapse-analytics/sql/on-demand-workspace-overview\n\n-- 1) Create a db via SQL serverless pool\nCREATE DATABASE tutorial_sql_01;\nGO\nUSE tutorial_sql_01;\nGO\n\nCREATE EXTERNAL DATA SOURCE DeltaLakeStorage\nWITH ( location = 'https://stoeacisd3gg1.dfs.core.windows.net/stage2' );\nGO\nCREATE EXTERNAL FILE FORMAT DeltaLakeFormat WITH ( FORMAT_TYPE = DELTA );\nGO\n\n-- 2) Create an external table\n-- for info on data types: https://docs.microsoft.com/en-us/sql/t-sql/data-types/data-types-transact-sql?view=sql-server-ver15\nCREATE EXTERNAL TABLE Person (\n     Id varchar(50),\n     FirstSeenDateTime datetime,\n     LastSeenDateTime datetime,\n     GivenName varchar(70),\n     MiddleName varchar(70),\n     PreferredGivenName varchar(70),\n     PreferredMiddleName varchar(70),\n     PreferredSurname varchar(70),\n     Surname varchar(70)\n) WITH (\n    LOCATION = '/tutorial_01/Person',\n    DATA_SOURCE = DeltaLakeStorage,\n    FILE_FORMAT = DeltaLakeFormat\n);\n\n-- 3) Create a view\ncreate or alter view PersonView\nas\nselect *\nfrom openrowset(\n           bulk '/tutorial_01/Person',\n           data_source = 'DeltaLakeStorage',\n           format = 'delta'\n    ) with (\n        Id varchar(50),\n        FirstSeenDateTime datetime,\n        LastSeenDateTime datetime,\n        GivenName varchar(70),\n        MiddleName varchar(70),\n        PreferredGivenName varchar(70),\n        PreferredMiddleName varchar(70),\n        PreferredSurname varchar(70),\n        Surname varchar(70)\n        ) as rows\n\n-- 4) use CETAS to export select statement with OPENROWSET result to  storage\n-- more info here: https://docs.microsoft.com/en-us/azure/synapse-analytics/sql/develop-tables-cetas\n-- Note: CETAS does not support writing out as Delta Lake format\nCREATE EXTERNAL FILE FORMAT ParquetFormat WITH ( FORMAT_TYPE = PARQUET );\n\nCREATE EXTERNAL TABLE PersonAthruE\nWITH (\n    LOCATION = '/tutorial_01/PersonAthruE',\n    DATA_SOURCE = DeltaLakeStorage,\n    FILE_FORMAT = ParquetFormat\n)  \nAS\nSELECT *\nFROM\n    OPENROWSET(\n           bulk '/tutorial_01/Person',\n           data_source = 'DeltaLakeStorage',\n           format = 'delta'\n    ) AS [r]\nWHERE Surname LIKE '[A-E]%'\nGO\n\n\n-- 5) Create stored procs (note that you won't see the stored proc listed in Synapse studio, but you will see it in SSMS)\n-- more info: https://docs.microsoft.com/en-us/azure/synapse-analytics/sql/develop-stored-procedures\nCREATE PROCEDURE drop_external_table_if_exists @name SYSNAME\nAS BEGIN\n    IF (0 <> (SELECT COUNT(*) FROM sys.external_tables WHERE name = @name))\n    BEGIN\n        DECLARE @drop_stmt NVARCHAR(200) = N'DROP EXTERNAL TABLE ' + @name; \n        EXEC sp_executesql @tsql = @drop_stmt;\n    END\nEND\n\n-- execute the stored proc\nEXEC drop_external_table_if_exists PersonAthruE\n\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "Built-in",
+				"databaseName": "tutorial_sql_02"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

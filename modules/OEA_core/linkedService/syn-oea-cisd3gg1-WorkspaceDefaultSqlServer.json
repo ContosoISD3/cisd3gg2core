@@ -1,9 +1,9 @@
 {
-	"name": "syn-oea-cisd3gg2core-WorkspaceDefaultSqlServer",
+	"name": "syn-oea-cisd3gg1-WorkspaceDefaultSqlServer",
 	"type": "Microsoft.Synapse/workspaces/linkedservices",
 	"properties": {
 		"typeProperties": {
-			"connectionString": "Data Source=tcp:syn-oea-cisd3gg2core.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+			"connectionString": "Data Source=tcp:syn-oea-cisd3gg1.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
 		},
 		"parameters": {
 			"DBName": {

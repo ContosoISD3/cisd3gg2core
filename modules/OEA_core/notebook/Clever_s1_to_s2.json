@@ -1,0 +1,109 @@
+{
+	"name": "Clever_s1_to_s2",
+	"properties": {
+		"folder": {
+			"name": "3) sandbox/archive/s1_to_s2"
+		},
+		"nbformat": 0,
+		"nbformat_minor": 0,
+		"bigDataPool": {
+			"referenceName": "spark2v3",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"synapse_widget": {
+				"version": "0.1"
+			},
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/7b9a4896-4541-483f-bdc7-d8f4ec6be3ee/resourceGroups/rg-oea-CISD3GG1/providers/Microsoft.Synapse/workspaces/syn-oea-cisd3gg1/bigDataPools/spark2v3",
+				"name": "spark2v3",
+				"type": "Spark",
+				"endpoint": "https://syn-oea-cisd3gg1.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spark2v3",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.0",
+				"nodeCount": 10,
+				"cores": 4,
+				"memory": 28,
+				"extraHeader": null
+			}
+		},
+		"cells": [
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Setup Clever data\n",
+					"\n",
+					"\n",
+					"\n",
+					"\n",
+					""
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"tags": [
+						"parameters"
+					]
+				},
+				"source": [
+					"storage_account = 'stoeacisd3gg1'\n",
+					"stage1 = 'abfss://stage1@' + storage_account + '.dfs.core.windows.net'\n",
+					"stage2 = 'abfss://stage2@' + storage_account + '.dfs.core.windows.net'\n",
+					"stage3 = 'abfss://stage3@' + storage_account + '.dfs.core.windows.net'\n",
+					"stage_anon = 'abfss://stage-anon@' + storage_account + '.dfs.core.windows.net'\n",
+					"\n",
+					"folder_to_process = 'inbound'"
+				],
+				"attachments": null,
+				"execution_count": 1
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"#schema = StructType([StructField('ObjectId', StringType()),StructField('AnchorId', StringType()),StructField('DisplayName', StringType()),StructField('FirstSeenDateTime', TimestampType()),StructField('GivenName', StringType()),StructField('LastSeenDateTime', TimestampType()),StructField('Mail', StringType()),StructField('MailNickname', StringType()),StructField('Role', StringType()),StructField('Surname', StringType()),StructField('UserPrincipalName', StringType()),StructField('StudentId', StringType()),StructField('TeacherId', StringType())])\r\n",
+					"df = spark.read.csv(stage1 + '/Clever/' + folder_to_process, header='true')\r\n",
+					"df.write.format('delta').mode('overwrite').save(stage2 + '/Clever')"
+				],
+				"attachments": null,
+				"execution_count": 2
+			}
+		]
+	}
+}

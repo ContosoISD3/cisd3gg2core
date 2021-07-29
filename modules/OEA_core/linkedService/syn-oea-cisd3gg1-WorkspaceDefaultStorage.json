@@ -1,9 +1,9 @@
 {
-	"name": "syn-oea-cisd3gg2core-WorkspaceDefaultStorage",
+	"name": "syn-oea-cisd3gg1-WorkspaceDefaultStorage",
 	"type": "Microsoft.Synapse/workspaces/linkedservices",
 	"properties": {
 		"typeProperties": {
-			"url": "https://stoeacisd3gg2core.dfs.core.windows.net"
+			"url": "https://stoeacisd3gg1.dfs.core.windows.net"
 		},
 		"type": "AzureBlobFS",
 		"connectVia": {

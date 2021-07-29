@@ -1,0 +1,158 @@
+{
+	"name": "M365_roster_s1_into_s2",
+	"properties": {
+		"activities": [
+			{
+				"name": "folder_metadata",
+				"description": "Gets the list of files in the inbound folder in stage1.",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "data_lake_binary",
+						"type": "DatasetReference",
+						"parameters": {
+							"filesystem": "stage1",
+							"directory": "M365/inbound/roster"
+						}
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "BinaryReadSettings"
+					}
+				}
+			},
+			{
+				"name": "for each file in inbound folder",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "folders",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('folders').output.Value",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"activities": [
+						{
+							"name": "M365_s1_to_s2",
+							"type": "SynapseNotebook",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"notebook": {
+									"referenceName": "M365_roster_v0p3_s1_to_s2",
+									"type": "NotebookReference"
+								},
+								"parameters": {
+									"storage_account": {
+										"value": "stoeacisd3gg1",
+										"type": "string"
+									},
+									"file_path": {
+										"value": {
+											"value": "/M365/inbound/roster/@{item().name}",
+											"type": "Expression"
+										},
+										"type": "string"
+									}
+								},
+								"snapshot": true
+							}
+						},
+						{
+							"name": "Move_Files",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "M365_s1_to_s2",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Move_files",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"source_filesystem": "stage1",
+									"source_path": {
+										"value": "M365/inbound/roster/@{item().name}",
+										"type": "Expression"
+									},
+									"destination_filesystem": "stage1",
+									"destination_path": {
+										"value": "M365/processed/roster/@{item().name}",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "folders",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "folder_metadata",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('folder_metadata').output.childitems",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@equals(item().type, 'Folder')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "2) Process from s1 into s2"
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-07-16T20:23:32Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

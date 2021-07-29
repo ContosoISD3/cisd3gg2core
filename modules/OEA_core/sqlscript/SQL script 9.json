@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 9",
+	"properties": {
+		"content": {
+			"query": "SELECT TOP (100) [Id]\n,[FirstSeenDateTime]\n,[LastSeenDateTime]\n,[GivenName]\n,[MiddleName]\n,[PreferredGivenName]\n,[PreferredMiddleName]\n,[PreferredSurname]\n,[Surname]\n FROM [dbo].[Person]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "Built-in",
+				"databaseName": "tutorial_sql2"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

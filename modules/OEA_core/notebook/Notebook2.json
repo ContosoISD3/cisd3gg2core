@@ -1,0 +1,186 @@
+{
+	"name": "Notebook2",
+	"properties": {
+		"folder": {
+			"name": "3) sandbox"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "spark3v3",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/7b9a4896-4541-483f-bdc7-d8f4ec6be3ee/resourceGroups/rg-oea-CISD3GG1/providers/Microsoft.Synapse/workspaces/syn-oea-cisd3gg1/bigDataPools/spark3v3",
+				"name": "spark3v3",
+				"type": "Spark",
+				"endpoint": "https://syn-oea-cisd3gg1.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spark3v3",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.0",
+				"nodeCount": 3,
+				"cores": 4,
+				"memory": 28
+			}
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"from pyspark.sql.functions import *\r\n",
+					"import pytest"
+				],
+				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"orders_schema = [\"OrderId\",\"OrderDate\", \"Region\", \"City\", \"Category\",\"Product\",\"Quantity\",\"UnitPrice\",\"TotalPrice\"]"
+				],
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"def load_data():\r\n",
+					"    # N.B. this would actually be loading the real data from somewhere in the data lake, or elsewhere...\r\n",
+					"    df = spark.createDataFrame(\r\n",
+					"        [\r\n",
+					"            (1,\"01/01/2020\",\"East\",\"Boston\",\"Bars\",\"Carrot\",33,1.77,58.41),\r\n",
+					"            (2,\"04/01/2020\",\"East\",\"Boston\",\"Crackers\",\"Whole Wheat\",87,3.49,303.63),\r\n",
+					"            (3,\"07/01/2020\",\"West\",\"Los Angeles\",\"Cookies\",\"Chocolate Chip\",58,1.87,108.46),\r\n",
+					"            (3,\"07/01/2020\",\"West\",\"Los Angeles\",\"Cookies\",\"Chocolate Chip\",58,1.87,108.46),\r\n",
+					"            (11,\"31/01/2020\",\"East\",\"Boston\",\"Cookies\",\"Arrowroot\",36,2.18,78.48),\r\n",
+					"            (12,\"03/02/2020\",\"East\",\"Boston\",\"Cookies\",\"Chocolate Chip\",31,1.87,57.97),\r\n",
+					"            (13,\"06/02/2020\",\"East\",\"Boston\",\"Crackers\",\"Whole Wheat\",28,3.49,97.72)      \r\n",
+					"        ],\r\n",
+					"        orders_schema \r\n",
+					"    )\r\n",
+					"    return df"
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"def remove_duplicate_orders(df):\r\n",
+					"    # Swap these lines over to fail test\r\n",
+					"    #return df \r\n",
+					"    #return df.distinct()\r\n",
+					"    return df.dropDuplicates([\"OrderId\"])"
+				],
+				"execution_count": 5
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Tests\r\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"def mytest():\r\n",
+					"    df = load_data()\r\n",
+					"    df = remove_duplicate_orders(df)\r\n",
+					"    #Assert\r\n",
+					"    expected_orders = 6\r\n",
+					"    number_of_orders = df.count()\r\n",
+					"    assert number_of_orders == 6, f'Expected {expected_orders} order after remove_duplicate_orders() but {number_of_orders} returned.'"
+				],
+				"execution_count": 10
+			}
+		]
+	}
+}

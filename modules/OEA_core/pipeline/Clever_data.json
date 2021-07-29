@@ -1,0 +1,66 @@
+{
+	"name": "Clever_data",
+	"properties": {
+		"activities": [
+			{
+				"name": "Clever_land_in_s1",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Clever_land_in_s1",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Clever_s1_into_s2",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Clever_land_in_s1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Clever_s1_into_s2",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Clever_s2_to_s3",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Clever_s1_into_s2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Clever_s2_to_s3",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "0) Master Orchestration"
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-07-15T15:28:41Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}
