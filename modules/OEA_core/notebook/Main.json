@@ -26,7 +26,8 @@
 			},
 			"language_info": {
 				"name": "python"
-			}
+			},
+			"sessionKeepAliveTimeout": 30
 		},
 		"cells": [
 			{
@@ -44,7 +45,7 @@
 					"collapsed": true
 				},
 				"source": [
-					"%run /2) OEA Framework/OEA_Core"
+					"%run /oea_framework/oea_lib"
 				],
 				"execution_count": null
 			},
@@ -63,7 +64,7 @@
 					"collapsed": true
 				},
 				"source": [
-					"%run /2) OEA Framework/Modules/M365/M365_lib"
+					"%run /oea_framework/Modules/M365/M365_lib"
 				],
 				"execution_count": null
 			},
